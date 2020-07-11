@@ -194,7 +194,7 @@ vector<ii> kruskal(){
 
     //int arg, char **args
     int main() {
-
+    //Hola 
 
         COLUMNAS = 3;
         FILAS = 3;
