@@ -1,0 +1,30 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+C:/Users/50661/CLionProjects/prograEstructurada/main.cpp
+bits/stdc++.h
+-
+iostream
+-
+cstdio
+-
+vector
+-
+cstdlib
+-
+cstring
+-
+ctime
+-
+queue
+-
+vector
+-
+string
+-
+
