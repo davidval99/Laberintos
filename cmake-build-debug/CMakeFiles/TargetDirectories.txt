@@ -1,3 +1,3 @@
-C:/Users/50661/CLionProjects/prograEstructurada/cmake-build-debug/CMakeFiles/prograEstructurada.dir
-C:/Users/50661/CLionProjects/prograEstructurada/cmake-build-debug/CMakeFiles/edit_cache.dir
-C:/Users/50661/CLionProjects/prograEstructurada/cmake-build-debug/CMakeFiles/rebuild_cache.dir
+C:/Users/50661/Documents/GitHub/progra3/cmake-build-debug/CMakeFiles/prograEstructurada.dir
+C:/Users/50661/Documents/GitHub/progra3/cmake-build-debug/CMakeFiles/edit_cache.dir
+C:/Users/50661/Documents/GitHub/progra3/cmake-build-debug/CMakeFiles/rebuild_cache.dir

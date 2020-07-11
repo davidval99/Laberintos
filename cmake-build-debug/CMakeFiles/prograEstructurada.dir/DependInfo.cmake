@@ -4,7 +4,7 @@ set(CMAKE_DEPENDS_LANGUAGES
   )
 # The set of files for implicit dependencies of each language:
 set(CMAKE_DEPENDS_CHECK_CXX
-  "C:/Users/50661/CLionProjects/prograEstructurada/main.cpp" "C:/Users/50661/CLionProjects/prograEstructurada/cmake-build-debug/CMakeFiles/prograEstructurada.dir/main.cpp.obj"
+  "C:/Users/50661/Documents/GitHub/progra3/main.cpp" "C:/Users/50661/Documents/GitHub/progra3/cmake-build-debug/CMakeFiles/prograEstructurada.dir/main.cpp.obj"
   )
 set(CMAKE_CXX_COMPILER_ID "GNU")
 

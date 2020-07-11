@@ -33,6 +33,33 @@ typedef long long ll;
 typedef pair<int,int> ii;
 const int MAXN=100000;
 
+vector<ii> G[MAXN];
+bool taken[MAXN];
+
+priority_queue<ii, vector<ii>, greater<ii> > pq;//min heap
+
+void process(int v){
+    taken[v]=true;
+    forall(e, G[v])
+        if(!taken[e->second]) pq.push(*e);
+}
+
+ll prim(){
+    vector<ii> edges;
+    zero(taken);
+    process(0);
+    ll cost=0;
+    while(sz(pq)){
+        ii e=pq.top(); pq.pop();
+        if(!taken[e.second]) cost+=e.first, process(e.second);
+        edges.push_back(make_pair(e.first,e.second)); // revisar si funciona
+
+    }
+    std::cout << cost; //return edges;
+    return cost;
+}
+
+
 struct UnionFind{
     vector<int> f;//the array contains the parent of each node
     void init(int n){f.clear(); f.insert(f.begin(), n, -1);}
@@ -45,9 +72,8 @@ struct UnionFind{
             f[comp(i)] = comp(j);}
         return con;
     }}uf;
-vector<ii> G[MAXN];
-int n;
 
+int n;
 
 struct Ar{int a,b,w;};
 bool operator<(const Ar& a, const Ar &b){return a.w<b.w;}
@@ -62,10 +88,8 @@ void normalizarKruskal(){
             a.b = G[i][j].second;
             a.w = G[i][j].first;
             E.push_back(a);
-            //std::cout << E.size() << "\n";
         }
     }
-    //std::cout << E.size() << "terminé";
 }
 
 int cmp(Ar a1, Ar a2){
@@ -89,23 +113,21 @@ vector<ii> kruskal(){
             edges.push_back(make_pair(it->a,it->b));
         }
     }
-    std::cout << cost;
+
+    forall(it, edges){
+        std::cout << it->first << "," << it->second <<"\n";
+    }
+
+    //std::cout << cost;
     return edges;
 }
 
+void addEdge(vector<pair<int, int> > adj[], int nodoIni, int nodoDest, int wt) {
 
 
-
-
-
-    void addEdge(vector<pair<int, int> > adj[], int nodoIni, int nodoDest, int wt) {
-
-
-        adj[nodoIni].push_back(make_pair(wt, nodoDest));
-        adj[nodoDest].push_back(make_pair(wt, nodoIni));
-
-
-    }
+    adj[nodoIni].push_back(make_pair(wt, nodoDest));
+    adj[nodoDest].push_back(make_pair(wt, nodoIni));
+}
 
 
     void printGraph(vector<pair<int, int> > adj[], int V) {
@@ -113,8 +135,8 @@ vector<ii> kruskal(){
         for (int u = 0; u < V; u++) {
             cout << "Node " << u << " makes an edge with \n";
             for (auto it = adj[u].begin(); it != adj[u].end(); it++) {
-                v = it->first;
-                w = it->second;
+                v = it->second;
+                w = it->first;
                 cout << "\tNode " << v << " with edge weight ="
                      << w << "\n";
             }
@@ -122,6 +144,7 @@ vector<ii> kruskal(){
         }
     }
 
+    /*
     void primMST(vector<pair<int, int> > adj[], int V) {
 
         priority_queue<ii, vector<ii>, greater<ii> > pq;
@@ -153,7 +176,7 @@ vector<ii> kruskal(){
 
         for (int i = 1; i < V; ++i)
             printf("%d - %d\n", parent[i], i);
-    }
+    }*/
 
     void makeGraph(int filas, int columnas) {
 
@@ -188,19 +211,23 @@ vector<ii> kruskal(){
         }
 
 
-        printGraph(G, n);
+        //printGraph(G, n);
 
     };
 
+
+
     //int arg, char **args
     int main() {
-    
+
 
         COLUMNAS = 3;
         FILAS = 3;
         makeGraph(3, 3);
-        n=sizeof(G);
+
+        //n=sizeof(G);
         normalizarKruskal();
+        //prim();
         kruskal();
 
     }
