@@ -230,25 +230,25 @@ int verVecinos(int nodoActual,int nodoDestino){
     else
         return 0;}
 
-    void crearTxt(vector<ii> edges){
+void crearTxt(vector<ii> edges){
 
-        int mascara = 0;
-        //Nodos
-        for(int i= 0; i< FILAS*COLUMNAS;i++){
-            //Aristas
-            for(int j=0; j < edges.size();j++){
-                if(edges[j].first == i){
-                    mascara = mascara | verVecinos(edges[j].first, edges[j].second);
-                }
-                else if(edges[j].second == i)  mascara = mascara | verVecinos(edges[j].second, edges[j].first);
-
+    int mascara = 0;
+    //Nodos
+    for(int i= 0; i< FILAS*COLUMNAS;i++){
+        //Aristas
+        for(int j=0; j < edges.size();j++){
+            if(edges[j].first == i){
+                mascara = mascara | verVecinos(edges[j].first, edges[j].second);
             }
-            std::cout <<"mask: " << mascara;
-            mascara = 0;
+            else if(edges[j].second == i)  mascara = mascara | verVecinos(edges[j].second, edges[j].first);
 
         }
+        std::cout <<"mask: " << mascara;
+        mascara = 0;
 
     }
+
+}
 
 
     //int arg, char **args
