@@ -10,6 +10,7 @@
 #include <cstdlib>
 #include <cstring>
 #include <ctime>
+#include <fstream>
 
 #include <queue>
 #include <vector>
@@ -215,19 +216,62 @@ void addEdge(vector<pair<int, int> > adj[], int nodoIni, int nodoDest, int wt) {
 
     };
 
+int verVecinos(int nodoActual,int nodoDestino){
+
+    if(nodoActual%COLUMNAS == nodoDestino || nodoDestino+COLUMNAS==nodoActual){
+        return 2;
+    }
+    else if(nodoActual-1 == nodoDestino || nodoDestino+1 ==nodoActual){
+
+        return 1;
+    }
+
+
+    else
+        return 0;}
+
+    void crearTxt(vector<ii> edges){
+
+        int mascara;
+
+        for(int i= 0; i<= FILAS*COLUMNAS;i++){
+            for(int j=0; i <=edges.size();i++){
+                if(edges[j].first = i){
+                    mascara = mascara | verVecinos(edges[j].first, edges[j].second);
+                }
+
+            }
+            std::cout <<"mask: " << mascara;
+
+        }
+
+    }
 
 
     //int arg, char **args
     int main() {
 
 
+
+
+/*
+        ofstream myfile;
+        myfile.open("test.txt");
+        myfile << "This is a test\n";
+        myfile.close();*/
+
+
+
         COLUMNAS = 3;
         FILAS = 3;
+        //int respuesta = verVecinos(8,7);
+        //std:cout << respuesta;
+
         makeGraph(3, 3);
 
         //n=sizeof(G);
         normalizarKruskal();
         //prim();
-        kruskal();
+        crearTxt(kruskal());
 
     }
