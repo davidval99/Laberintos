@@ -232,16 +232,19 @@ int verVecinos(int nodoActual,int nodoDestino){
 
     void crearTxt(vector<ii> edges){
 
-        int mascara;
-
-        for(int i= 0; i<= FILAS*COLUMNAS;i++){
-            for(int j=0; i <=edges.size();i++){
-                if(edges[j].first = i){
+        int mascara = 0;
+        //Nodos
+        for(int i= 0; i< FILAS*COLUMNAS;i++){
+            //Aristas
+            for(int j=0; j < edges.size();j++){
+                if(edges[j].first == i){
                     mascara = mascara | verVecinos(edges[j].first, edges[j].second);
                 }
+                else if(edges[j].second == i)  mascara = mascara | verVecinos(edges[j].second, edges[j].first);
 
             }
             std::cout <<"mask: " << mascara;
+            mascara = 0;
 
         }
 
@@ -262,12 +265,14 @@ int verVecinos(int nodoActual,int nodoDestino){
 
 
 
-        COLUMNAS = 3;
-        FILAS = 3;
-        //int respuesta = verVecinos(8,7);
+        COLUMNAS = 4;
+        FILAS = 4;
+         //vector<int> kk ={1,2,3,5};
+        //int respuesta = verVecinos(3,0);
+        //respuesta = respuesta | 2;
         //std:cout << respuesta;
 
-        makeGraph(3, 3);
+        makeGraph(4, 4);
 
         //n=sizeof(G);
         normalizarKruskal();
