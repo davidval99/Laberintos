@@ -230,7 +230,9 @@ int verVecinos(int nodoActual,int nodoDestino){
     else
         return 0;}
 
-void crearTxt(vector<ii> edges){
+vector<int> setMascara(vector<ii> edges){
+
+    vector<int> maskTxt;
 
     int mascara = 0;
     //Nodos
@@ -243,10 +245,28 @@ void crearTxt(vector<ii> edges){
             else if(edges[j].second == i)  mascara = mascara | verVecinos(edges[j].second, edges[j].first);
 
         }
+        maskTxt.push_back(mascara);
         std::cout <<"mask: " << mascara;
         mascara = 0;
 
     }
+    return maskTxt;
+
+}
+void generarTxt(vector<int> mascara) {
+    ofstream myfile;
+    myfile.open("test.txt");
+    int contador = 0;
+
+    for (int i = 0; i < mascara.size(); i++) {
+        myfile << mascara[i];
+        contador++;
+        if (contador % COLUMNAS == 0){ //Puede ser mas eficiente.
+            myfile << "\n";
+        }
+    }
+
+    myfile.close();
 
 }
 
@@ -277,6 +297,6 @@ void crearTxt(vector<ii> edges){
         //n=sizeof(G);
         normalizarKruskal();
         //prim();
-        crearTxt(kruskal());
+        generarTxt(setMascara(kruskal()));
 
     }
