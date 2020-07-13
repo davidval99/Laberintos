@@ -32,34 +32,40 @@ int COLUMNAS;
 
 typedef long long ll;
 typedef pair<int,int> ii;
+typedef pair<int,pair<int,int>> ip;
 const int MAXN=100000;
 
 vector<ii> G[MAXN];
 bool taken[MAXN];
-
-priority_queue<ii, vector<ii>, greater<ii> > pq;//min heap
+priority_queue<ip, vector<ip>, greater<ip> > pq;//min heap
 
 void process(int v){
     taken[v]=true;
-    forall(e, G[v])
-        if(!taken[e->second]) pq.push(*e);
+    forall(it, G[v])
+        if(!taken[it->second]) pq.push(make_pair(it->first,make_pair(v,it->second)));
 }
 
-ll prim(){
+vector<ii> prim(){
     vector<ii> edges;
     zero(taken);
     process(0);
     ll cost=0;
     while(sz(pq)){
-        ii e=pq.top(); pq.pop();
-        if(!taken[e.second]) cost+=e.first, process(e.second);
-        edges.push_back(make_pair(e.first,e.second)); // revisar si funciona
+        ip e=pq.top(); pq.pop();
+
+        if(!taken[e.second.second]){
+            cost+=e.first, process(e.second.second);
+            edges.push_back(make_pair(e.second.first,e.second.second));
+        }
 
     }
-    std::cout << cost; //return edges;
-    return cost;
-}
+    /*
+    forall(it, edges){
+        std::cout << it->first << "," << it->second <<"\n";
+    }*/
 
+    return edges;
+}
 
 struct UnionFind{
     vector<int> f;//the array contains the parent of each node
@@ -73,8 +79,8 @@ struct UnionFind{
             f[comp(i)] = comp(j);}
         return con;
     }}uf;
-
 int n;
+
 
 struct Ar{int a,b,w;};
 bool operator<(const Ar& a, const Ar &b){return a.w<b.w;}
@@ -98,13 +104,11 @@ int cmp(Ar a1, Ar a2){
 }
 
 vector<ii> kruskal(){
+    normalizarKruskal();
     vector<ii> edges;
     ll cost=0;
     sort(E.begin(), E.end());//ordenar aristas de menor a mayor
     uf.init(n);
-    forall(it,E){
-        std::cout << it->a << ", " << it->b << ", " << ", " << it->w << "\n";
-    }
 
     forall(it, E){
         if(uf.comp(it->a)!=uf.comp(it->b)){//si no estan conectados
@@ -113,13 +117,14 @@ vector<ii> kruskal(){
             cost=cost+it->w;
             edges.push_back(make_pair(it->a,it->b));
         }
+
+
     }
 
     forall(it, edges){
         std::cout << it->first << "," << it->second <<"\n";
     }
 
-    //std::cout << cost;
     return edges;
 }
 
@@ -130,56 +135,21 @@ void addEdge(vector<pair<int, int> > adj[], int nodoIni, int nodoDest, int wt) {
     adj[nodoDest].push_back(make_pair(wt, nodoIni));
 }
 
-
-    void printGraph(vector<pair<int, int> > adj[], int V) {
-        int v, w;
-        for (int u = 0; u < V; u++) {
-            cout << "Node " << u << " makes an edge with \n";
-            for (auto it = adj[u].begin(); it != adj[u].end(); it++) {
-                v = it->second;
-                w = it->first;
-                cout << "\tNode " << v << " with edge weight ="
-                     << w << "\n";
-            }
-            cout << "\n";
+void printGraph(vector<pair<int, int> > adj[], int V) {
+    int v, w;
+    for (int u = 0; u < V; u++) {
+        cout << "Node " << u << " makes an edge with \n";
+        for (auto it = adj[u].begin(); it != adj[u].end(); it++) {
+            v = it->second;
+            w = it->first;
+            cout << "\tNode " << v << " with edge weight ="
+            << w << "\n";
         }
+        cout << "\n";
     }
+}
 
-    /*
-    void primMST(vector<pair<int, int> > adj[], int V) {
-
-        priority_queue<ii, vector<ii>, greater<ii> > pq;
-        int src = 0;
-        vector<int> key(V, INF);
-        vector<int> parent(V, -1);
-        vector<bool> inMST(V, false);
-        pq.push(make_pair(0, src));
-        key[src] = 0;
-
-        while (!pq.empty()) {
-            int u = pq.top().second;
-            pq.pop();
-            inMST[u] = true; // Include vertex in MST
-
-            for (auto x : adj[u]) {
-
-                int v = x.first;
-                int weight = x.second;
-
-                if (inMST[v] == false && key[v] > weight) {
-
-                    key[v] = weight;
-                    pq.push(make_pair(key[v], v));
-                    parent[v] = u;
-                }
-            }
-        }
-
-        for (int i = 1; i < V; ++i)
-            printf("%d - %d\n", parent[i], i);
-    }*/
-
-    void makeGraph(int filas, int columnas) {
+void makeGraph(int filas, int columnas) {
 
         n = (filas * columnas);
 
@@ -246,13 +216,14 @@ vector<int> setMascara(vector<ii> edges){
 
         }
         maskTxt.push_back(mascara);
-        std::cout <<"mask: " << mascara;
         mascara = 0;
 
     }
     return maskTxt;
 
 }
+
+
 void generarTxt(vector<int> mascara) {
     ofstream myfile;
     myfile.open("test.txt");
@@ -265,7 +236,6 @@ void generarTxt(vector<int> mascara) {
             myfile << "\n";
         }
     }
-
     myfile.close();
 
 }
@@ -275,28 +245,22 @@ void generarTxt(vector<int> mascara) {
     int main() {
 
 
-
-
-/*
-        ofstream myfile;
-        myfile.open("test.txt");
-        myfile << "This is a test\n";
-        myfile.close();*/
-
-
-
-        COLUMNAS = 4;
+        COLUMNAS = 4; //Esto se debe setear por parametros
         FILAS = 4;
-         //vector<int> kk ={1,2,3,5};
-        //int respuesta = verVecinos(3,0);
-        //respuesta = respuesta | 2;
-        //std:cout << respuesta;
+        makeGraph(FILAS, COLUMNAS);
 
-        makeGraph(4, 4);
 
-        //n=sizeof(G);
-        normalizarKruskal();
-        //prim();
-        generarTxt(setMascara(kruskal()));
+        char algoritmo = 'p'; //Por parametro se decide cual algoritmo se utilizará
+
+        if(algoritmo == 'k'){
+            generarTxt(setMascara(kruskal()));
+            std::cout << "Hice kruskal";
+        }
+        else if(algoritmo == 'p'){
+            generarTxt(setMascara(prim()));
+            std::cout << "Hice prim";
+        }
+
+
 
     }
