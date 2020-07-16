@@ -3,165 +3,72 @@
 #include <stdlib.h>
 #include <GL/glut.h>
 
-
-#define CI_OFFSET_1 16
-#define CI_OFFSET_2 32
-
-
-GLenum rgb, doubleBuffer;
-
-GLenum antiAlias, stipple;
-GLubyte stippleBits[32*4] = {
-    0xAA, 0xAA, 0xAA, 0xAA, 0x55, 0x55, 0x55, 0x55,
-    0xAA, 0xAA, 0xAA, 0xAA, 0x55, 0x55, 0x55, 0x55,
-    0xAA, 0xAA, 0xAA, 0xAA, 0x55, 0x55, 0x55, 0x55,
-    0xAA, 0xAA, 0xAA, 0xAA, 0x55, 0x55, 0x55, 0x55,
-    0xAA, 0xAA, 0xAA, 0xAA, 0x55, 0x55, 0x55, 0x55,
-    0xAA, 0xAA, 0xAA, 0xAA, 0x55, 0x55, 0x55, 0x55,
-    0xAA, 0xAA, 0xAA, 0xAA, 0x55, 0x55, 0x55, 0x55,
-    0xAA, 0xAA, 0xAA, 0xAA, 0x55, 0x55, 0x55, 0x55,
-    0xAA, 0xAA, 0xAA, 0xAA, 0x55, 0x55, 0x55, 0x55,
-    0xAA, 0xAA, 0xAA, 0xAA, 0x55, 0x55, 0x55, 0x55,
-    0xAA, 0xAA, 0xAA, 0xAA, 0x55, 0x55, 0x55, 0x55,
-    0xAA, 0xAA, 0xAA, 0xAA, 0x55, 0x55, 0x55, 0x55,
-    0xAA, 0xAA, 0xAA, 0xAA, 0x55, 0x55, 0x55, 0x55,
-    0xAA, 0xAA, 0xAA, 0xAA, 0x55, 0x55, 0x55, 0x55,
-    0xAA, 0xAA, 0xAA, 0xAA, 0x55, 0x55, 0x55, 0x55,
-    0xAA, 0xAA, 0xAA, 0xAA, 0x55, 0x55, 0x55, 0x55,
-};
-
-
-static void Init(void)
+int c = 0;
+void init()
 {
-    GLint i;
-
-    if (!rgb) {
- for (i = 0; i < 16; i++) {
-     glutSetColor(i+CI_OFFSET_1, 0.0, 0.0, i/15.0);
-     glutSetColor(i+CI_OFFSET_2, 0.0, i/15.0, 0.0);
- }
-    }
-
-    glClearColor(0.0, 0.0, 0.0, 0.0);
-    glClearIndex(0.0);
-
-    glPolygonStipple(stippleBits);
-
-    antiAlias = GL_FALSE;
-    stipple = GL_FALSE;
-}
-
-static void Reshape(int width, int height)
-{
-
-    glViewport(0, 0, width, height);
-
+    // For displaying the window color
+    glClearColor(0, 1, 1, 0);
+    // Choosing the type of projection
     glMatrixMode(GL_PROJECTION);
-    glLoadIdentity();
-    glOrtho(-1.0, 1.0, -1.0, 1.0, -0.5, 1000.0);
-    glMatrixMode(GL_MODELVIEW);
+    // for setting the transformation which here is 2D
+    gluOrtho2D(0, 800, 0, 600);
 }
 
-static void Key(unsigned char key, int x, int y)
+void drawSquare(GLint x1, GLint y1, GLint x2, GLint y2, GLint x3, GLint y3, GLint x4, GLint y4)
 {
-
-    switch (key) {
-      case '1':
- antiAlias = !antiAlias;
- glutPostRedisplay();
- break;
-      case '2':
- stipple = !stipple;
- glutPostRedisplay();
- break;
-      case 27:
- exit(0);
+    // if color is 0 then draw white box and change value of color = 1
+    if (c == 0)
+    {
+        glColor3f(1, 1, 1); // white color value is 1 1 1
+        c = 1;
     }
-}
-
-static void Draw(void)
-{
-    GLint ci1, ci2;
-
-    glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
-
-    if (antiAlias) {
- ci1 = CI_OFFSET_1;
- ci2 = CI_OFFSET_2;
- glBlendFunc(GL_SRC_ALPHA, GL_ONE);
- glEnable(GL_BLEND);
- glEnable(GL_POLYGON_SMOOTH);
- glDisable(GL_DEPTH_TEST);
-    } else {
- ci1 = 4;
- ci2 = 2;
- glDisable(GL_BLEND);
- glDisable(GL_POLYGON_SMOOTH);
- glEnable(GL_DEPTH_TEST);
+    // if color is 1 then draw black box and change value of color = 0
+    else
+    {
+        glColor3f(0, 0, 0); // black color value is 0 0 0
+        c = 0;
     }
 
-    if (stipple) {
- glEnable(GL_POLYGON_STIPPLE);
-    } else {
- glDisable(GL_POLYGON_STIPPLE);
-    }
-
-    glBegin(GL_TRIANGLES);
- (rgb) ? glColor3f(0.0, 0.0, 1.0) : glIndexi(ci1);
- glVertex3f( 0.9, -0.9, -30.0);
- glVertex3f( 0.9,  0.9, -30.0);
- glVertex3f(-0.9,  0.0, -30.0);
- (rgb) ? glColor3f(0.0, 1.0, 0.0) : glIndexi(ci2);
- glVertex3f(-0.9, -0.9, -40.0);
- glVertex3f(-0.9,  0.9, -40.0);
- glVertex3f( 0.9,  0.0, -25.0);
+    // Draw Square
+    glBegin(GL_POLYGON);
+    glVertex2i(x1, y1);
+    glVertex2i(x2, y2);
+    glVertex2i(x3, y3);
+    glVertex2i(x4, y4);
     glEnd();
+}
+void chessboard()
+{
+    glClear(GL_COLOR_BUFFER_BIT); // Clear display window
+    GLint x, y;
 
-    if (doubleBuffer) {
- glutSwapBuffers();
-    } else {
- glFlush();
+    for (x = 0; x <= 800; x += 100)
+    {
+        for (y = 0; y <= 600; y += 75)
+        {
+            drawSquare(x, y + 75, x + 100, y + 75, x + 100, y, x, y);
+        }
     }
+    // Process all OpenGL routine s as quickly as possible
+    glFlush();
 }
 
-static void Args(int argc, char **argv)
+int main(int agrc, char **argv)
 {
-    GLint i;
-
-    rgb = GL_TRUE;
-    doubleBuffer = GL_FALSE;
-
-    for (i = 1; i < argc; i++) {
- if (strcmp(argv[i], "-ci") == 0) {
-     rgb = GL_FALSE;
- } else if (strcmp(argv[i], "-rgb") == 0) {
-     rgb = GL_TRUE;
- } else if (strcmp(argv[i], "-sb") == 0) {
-     doubleBuffer = GL_FALSE;
- } else if (strcmp(argv[i], "-db") == 0) {
-     doubleBuffer = GL_TRUE;
- }
-    }
-}
-
-int main(int argc, char **argv)
-{
-    GLenum type;
-
-    glutInit(&argc, argv);
-    Args(argc, argv);
-
-    type = GLUT_DEPTH;
-    type |= (rgb) ? GLUT_RGB : GLUT_INDEX;
-    type |= (doubleBuffer) ? GLUT_DOUBLE : GLUT_SINGLE;
-    glutInitDisplayMode(type);
-    glutInitWindowSize(300, 300);
-    glutCreateWindow("Depth Test");
-
-    Init();
-
-    glutReshapeFunc(Reshape);
-    glutKeyboardFunc(Key);
-    glutDisplayFunc(Draw);
+    // Initialize GLUT
+    glutInit(&agrc, argv);
+    // Set display mode
+    glutInitDisplayMode(GLUT_SINGLE | GLUT_RGB);
+    // Set top - left display window position.
+    glutInitWindowPosition(100, 100);
+    // Set display window width and height
+    glutInitWindowSize(800, 600);
+    // Create display window with the given title
+    glutCreateWindow("Chess Board using OpenGL in C++");
+    // Execute initialization procedure
+    init();
+    // Send graphics to display window
+    glutDisplayFunc(chessboard);
+    // Display everything and wait.
     glutMainLoop();
 }
