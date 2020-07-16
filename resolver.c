@@ -12,10 +12,37 @@ typedef struct Nodo{
 
 struct Nodo* cabeza = NULL;
 struct Nodo* cola = NULL;
+struct Nodo* pila = NULL;
 
 int N;
 int* ADJ;
 int  COLUMNAS;
+
+void pushP(int valor){
+
+    struct Nodo* nuevo = malloc(sizeof(struct Nodo));
+    nuevo->valor = valor;
+
+    if (pila == NULL) {
+        pila = nuevo;
+        nuevo->siguiente = NULL;
+    }
+    else{
+        nuevo->siguiente = pila;
+        pila = nuevo;
+    }
+}
+
+int pullP(){
+    if (pila == NULL) return -1;
+    else{
+        int valor = pila->valor;
+        struct Nodo* tmp = pila;
+        pila = pila->siguiente;
+        free(tmp);
+        return valor;
+    }
+}
 
 void push(int valor){
     struct Nodo* nuevo =  malloc(sizeof(struct Nodo));
@@ -45,13 +72,52 @@ int pull(){
 };
 
 
+int * caminodfs(){
 
+    int* resultado = (int *)calloc(N,sizeof(int));
+    int tmp = pullP();
+
+    for (int i=0;tmp != -1;i++){
+
+        resultado[i] = tmp;
+
+        tmp = pullP();
+
+    }
+    return resultado;
+}
+int  dfsAux(int ini, int fin,int* visitados){
+
+
+    visitados[ini] = 1;
+    pushP(ini);
+    if (ini == fin){
+        return 0;
+    }
+    if (NORTE(ADJ[ini]) && visitados[ini-COLUMNAS] != 1) return dfsAux(ini-COLUMNAS,fin,visitados);
+    if (OESTE(ADJ[ini]) && visitados[ini-1] != 1) return dfsAux(ini-1,fin,visitados);
+    if (ini%COLUMNAS != COLUMNAS-1 && OESTE(ADJ[ini+1]) && visitados[ini+1] !=1 ) return dfsAux(ini+1,fin,visitados);
+    if (ini+COLUMNAS < N && NORTE(ADJ[ini+COLUMNAS]) && visitados[ini+COLUMNAS] != 1) return dfsAux(ini+COLUMNAS,fin,visitados);
+    else{
+        int n=pullP();
+        n=pullP();
+        return dfsAux(n,fin,visitados);
+    }
+}
+int* dfs (int ini, int fin){
+    int* visitados = (int*)calloc(N,sizeof(int));
+    int x = dfsAux(ini,fin,visitados);
+    int* camino = caminodfs();
+    free(visitados);
+    return camino;
+}
 int* bfs(int ini, int fin){
 
-    int actual, next;
+    int actual= -1;
+    int next;
     int cont = 0;
-    int* visitados= (int*)calloc(N,sizeof(int));
-    int camino[N];
+    int* visitados= (int*)calloc(N+1,sizeof(int));
+    int camino[N+1];
 
     push(ini);
     visitados[ini] = 1;
@@ -63,17 +129,19 @@ int* bfs(int ini, int fin){
         actual = pull();
         camino[cont]= actual;
         cont++;
-        //printf("Tudo bem %d  \n ", actual);
 
-        if (NORTE(ADJ[actual]) && visitados[actual-COLUMNAS] != 1) {
+
+        if (NORTE(ADJ[actual])  && visitados[actual-COLUMNAS] != 1) {
             push(actual-COLUMNAS);
             visitados[actual-COLUMNAS] = 1;
+
 
         }
 
         if (OESTE(ADJ[actual]) && visitados[actual-1] != 1){
             push(actual-1);
-            visitados[actual-1];
+            visitados[actual-1]=1;
+
 
 
         }
@@ -90,9 +158,7 @@ int* bfs(int ini, int fin){
 
     }
     camino[cont] = fin;
-    for (int j = 0; j < cont; ++j) {
-        printf("%d \n",camino[j]);
-    }
+
     return camino;
 }
 
@@ -142,18 +208,23 @@ int main()
 
             valor = (int)caracteres[i]-48;
             ADJ[N] = valor;
+            //printf("%d valor \n",valor);
             N++;
+
         }
 
 
 
     }
 
-    int* camino = bfs(0,2);
+    //int* camino = bfs(4,0);
+
+    //int * camino = dfs(11,0);
 
 
 
     fclose(archivo);
     return 0;
 }
+
 
