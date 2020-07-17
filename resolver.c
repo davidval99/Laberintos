@@ -76,11 +76,9 @@ int * caminodfs(){
 
     int* resultado = (int *)calloc(N,sizeof(int));
     int tmp = pullP();
-
-    for (int i=0;tmp != -1;i++){
-
+    for (int i=N;tmp != -1;i--){
+        printf("%d \n",tmp);
         resultado[i] = tmp;
-
         tmp = pullP();
 
     }
@@ -171,7 +169,7 @@ int elementoXY(int x, int y){
 
     else{
 
-        resultado = ((COLUMNAS ) * x) +y;
+        resultado = ((COLUMNAS) * (x)) +y;
         return resultado;
     }
 }
@@ -216,9 +214,9 @@ int main()
 
 
     }
-
+    //LLAMADAS
     //int* camino = bfs(4,0);
-
+    //int o = elementoXY(2,1); // Este muestra que posicion de ADJ estan en un (x,y)
     //int * camino = dfs(11,0);
 
 
@@ -226,5 +224,6 @@ int main()
     fclose(archivo);
     return 0;
 }
+
 
 
